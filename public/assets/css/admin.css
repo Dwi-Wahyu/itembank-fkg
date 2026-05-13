@@ -138,10 +138,10 @@ body.app{ background:var(--bg); color:var(--ink); }
 }
 
 /* Bagi lebar kolom (total = 100%) */
-.table-fit .col-aksi       { width: 7%;  }  /* tombol */
-.table-fit .col-reg        { width: 17%; }  /* no register */
+.table-fit .col-aksi       { width: 12%; min-width: 110px; white-space: nowrap; }  /* tombol */
+.table-fit .col-reg        { width: 14%; }  /* no register */
 .table-fit .col-format     { width: 8%;  text-align:center; }
-.table-fit .col-vignette   { width: 34%; }
+.table-fit .col-vignette   { width: 32%; }
 .table-fit .col-tanya      { width: 28%; }
 .table-fit .col-status     { width: 6%;  text-align:center; }
 
