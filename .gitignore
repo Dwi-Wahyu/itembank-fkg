@@ -78,3 +78,5 @@ user_guide_src/build/*
 #---------------------------------------------------------
 _modules/
 contexts/
+
+Caddyfile
