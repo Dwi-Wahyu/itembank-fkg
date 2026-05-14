@@ -24,22 +24,10 @@
 
   // DESKTOP mini (ikon)
   const miniBtn = document.getElementById('btnSidebarMini');
-  const toggleIcon = document.getElementById('toggleIcon');
   
   const applyMini = on => { 
     document.body.classList.toggle('app-mini', !!on); 
     localStorage.setItem('app-mini', on ? '1' : '0');
-    
-    // Update icon: closed (mini) -> chevron-right, open -> chevron-left
-    if (toggleIcon) {
-      if (on) {
-        toggleIcon.classList.remove('bi-chevron-double-left');
-        toggleIcon.classList.add('bi-chevron-double-right');
-      } else {
-        toggleIcon.classList.remove('bi-chevron-double-right');
-        toggleIcon.classList.add('bi-chevron-double-left');
-      }
-    }
   };
 
   if (miniBtn) {
@@ -54,16 +42,20 @@
       
       if (isMini && isDesktop) {
         const menuItem = e.target.closest('.menu-item');
-        // Don't auto-expand if clicking the toggle button itself (already handled)
-        if (menuItem && !menuItem.closest('.sidebar-footer')) {
+        if (menuItem) {
+          // If it's a simple link (not a parent toggle), navigation will happen naturally.
+          // We just expand the sidebar for the next view.
           applyMini(false);
           
           if (menuItem.classList.contains('menu-parent')) {
+            // For parents, we might need to expand the specific collapse
             const targetId = menuItem.getAttribute('href');
-            const targetEl = document.querySelector(targetId);
-            if (targetEl && !targetEl.classList.contains('show')) {
-               const bsCollapse = bootstrap.Collapse.getInstance(targetEl) || new bootstrap.Collapse(targetEl);
-               bsCollapse.show();
+            if (targetId && targetId.startsWith('#')) {
+              const targetEl = document.querySelector(targetId);
+              if (targetEl && !targetEl.classList.contains('show')) {
+                 const bsCollapse = bootstrap.Collapse.getInstance(targetEl) || new bootstrap.Collapse(targetEl);
+                 bsCollapse.show();
+              }
             }
           }
         }

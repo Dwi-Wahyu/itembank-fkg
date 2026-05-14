@@ -84,8 +84,12 @@ $routes->group('admin', ['namespace' => 'Modules\Admin\Controllers'], static fun
         $routes->get ('ujian/teori/pilih-mahasiswa/(:segment)', 'UjianController::pilihMahasiswa/$1');
 
     // ACTION: tambah & hapus peserta
+        $routes->get ('ujian/teori/peserta-add/(:segment)/(:num)', 'UjianController::pesertaAdd/$1/$2');
         $routes->post('ujian/teori/peserta-add/(:segment)/(:num)', 'UjianController::pesertaAdd/$1/$2');
         $routes->post('ujian/teori/peserta-del/(:segment)/(:num)', 'UjianController::pesertaDel/$1/$2');
+
+        $routes->get ('ujian/teori/mass-assign-soal/(:num)', 'UjianController::massAssignSoal/$1');
+        $routes->post('ujian/teori/mass-assign-soal-save/(:num)', 'UjianController::massAssignSoalSave/$1');
     // routes.php (dalam group admin yang sudah ada)
 $routes->get ('ujian/praktek',              'UjianController::praktek');          // list
 $routes->post('ujian/praktek/create',       'UjianController::praktekCreate');    // create via modal

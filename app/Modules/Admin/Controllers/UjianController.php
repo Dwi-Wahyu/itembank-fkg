@@ -283,11 +283,12 @@ public function teoriUpdate($id)
         $jml = $db->table('admin_cbt')->where('kode', $uji['kode'])->countAllResults();
 
         return view('\Modules\Admin\Views\ujian\teori_detail', [
-            'title' => $uji['nama'],
-            'uji'   => $uji,
-            'dep'   => $dep['nama'] ?? 'Semua Departemen',
-            'blok'  => $blok['nama'] ?? 'Semua Blok',
-            'jumlah'=> $jml,
+            'title'      => $uji['nama'],
+            'menuActive' => 'ujian_teori',
+            'uji'        => $uji,
+            'dep'        => $dep['nama'] ?? 'Semua Departemen',
+            'blok'       => $blok['nama'] ?? 'Semua Blok',
+            'jumlah'     => $jml,
         ]);
     }
 
@@ -485,11 +486,12 @@ public function praktekDetail(int $id)
     $jml = $db->table('admin_cbt')->where('kode', $uji['kode'])->countAllResults();
 
     return view('\Modules\Admin\Views\ujian\praktek_detail', [
-        'title'  => $uji['nama_ujian'],
-        'uji'    => $uji,
-        'dep'    => $dep['nama'] ?? 'Semua Departemen',
-        'blok'   => $blok['nama'] ?? 'Semua Blok',
-        'jumlah' => $jml,
+        'title'      => $uji['nama_ujian'],
+        'menuActive' => 'ujian_praktek',
+        'uji'        => $uji,
+        'dep'        => $dep['nama'] ?? 'Semua Departemen',
+        'blok'       => $blok['nama'] ?? 'Semua Blok',
+        'jumlah'     => $jml,
     ]);
 }
 
@@ -921,4 +923,97 @@ public function soalDel(int $soalId)
     ]);
 }
 
+/**
+ * Halaman Mass Assign Soal (Teori)
+ */
+public function massAssignSoal(int $id)
+{
+    $db = $this->db;
+    $uji = $db->table('buat_teori')->where('id', $id)->get()->getRowArray();
+    if (!$uji) {
+        return redirect()->to(site_url('admin/ujian/teori'))->with('error', 'Sesi ujian tidak ditemukan');
+    }
+
+    $q      = trim((string)$this->request->getGet('q'));
+    $depId  = $this->request->getGet('departemen_id');
+    $blokId = $this->request->getGet('blok_id');
+    $page   = max(1, (int)($this->request->getGet('page') ?? 1));
+    $per    = 20;
+
+    $builder = $db->table('ujian_teori t')
+        ->select('t.id, t.register, t.vignette, t.pertanyaan, t.status, t.id_paket')
+        ->where('t.status', 2); // Hanya yang sudah PUBLISH
+
+    if ($q !== '') {
+        $builder->groupStart()
+            ->like('t.register', $q)
+            ->orLike('t.vignette', $q)
+            ->orLike('t.pertanyaan', $q)
+            ->groupEnd();
+    }
+    if ($depId) $builder->where('t.departemen', $depId);
+    if ($blokId) $builder->where('t.blok', $blokId);
+
+    $total = (clone $builder)->countAllResults();
+    $rows  = $builder->orderBy('t.id', 'DESC')
+                     ->limit($per, ($page - 1) * $per)
+                     ->get()->getResultArray();
+
+    $deps = $db->table('departemen')->select('id,nama')->orderBy('nama', 'ASC')->get()->getResultArray();
+    $blks = $db->table('blok')->select('id,nama')->orderBy('nama', 'ASC')->get()->getResultArray();
+
+    return view('\Modules\Admin\Views\ujian\mass_assign_soal', [
+        'title'      => 'Mass Assign Soal: ' . $uji['nama'],
+        'menuActive' => 'ujian_teori',
+        'uji'        => $uji,
+        'rows'       => $rows,
+        'departemen' => $deps,
+        'blok'       => $blks,
+        'filters'    => ['q' => $q, 'depId' => $depId, 'blokId' => $blokId],
+        'page'       => $page,
+        'per'        => $per,
+        'total'      => $total,
+        'pages'      => max(1, (int)ceil($total / $per))
+    ]);
+
 }
+/**
+ * Simpan Mass Assign Soal (Surgical Sync)
+ */
+public function massAssignSoalSave(int $id)
+{
+    if (!$this->request->is('post')) return redirect()->back();
+
+    $visibleIds = $this->request->getPost('visible_ids') ?: []; // semua ID yang tampil di tabel tadi
+    $soalIds    = $this->request->getPost('soal_ids') ?: [];    // ID yang diceklis
+
+    $db = $this->db;
+    $db->transStart();
+
+    // 1. Lepas tautan soal yang SEDANG TAMPIL tapi TIDAK DICEKLIS (hanya jika sebelumnya milik paket ini)
+    $uncheckIds = array_diff($visibleIds, $soalIds);
+    if (!empty($uncheckIds)) {
+        $db->table('ujian_teori')
+           ->where('id_paket', $id)
+           ->whereIn('id', $uncheckIds)
+           ->update(['id_paket' => 0, 'updated_at' => date('Y-m-d H:i:s')]);
+    }
+
+    // 2. Tautkan soal yang DICEKLIS
+    if (!empty($soalIds)) {
+        $db->table('ujian_teori')
+           ->whereIn('id', $soalIds)
+           ->update(['id_paket' => $id, 'updated_at' => date('Y-m-d H:i:s')]);
+    }
+
+    $db->transComplete();
+
+    if ($db->transStatus() === FALSE) {
+        return redirect()->back()->with('error', 'Gagal menyimpan perubahan');
+    }
+
+    return redirect()->to(site_url('admin/ujian/teori/detail/' . $id))
+                    ->with('success', 'Perubahan daftar soal berhasil disimpan');
+}
+}
+

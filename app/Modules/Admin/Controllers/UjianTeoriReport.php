@@ -124,10 +124,17 @@ $countAnswers = function(array $subset) use ($db, $kode, $soal) {
 
         // ------------- VIEW HTML (semua halaman) -------------
         $kop = function(string $judul){
+            $logoPath = FCPATH . 'assets/img/logo_unhas.png';
+            $logoData = '';
+            if (file_exists($logoPath)) {
+                $type = pathinfo($logoPath, PATHINFO_EXTENSION);
+                $data = file_get_contents($logoPath);
+                $logoData = 'data:image/' . $type . ';base64,' . base64_encode($data);
+            }
             return '
               <table width="100%" style="border-bottom:3px solid #000;margin-bottom:6px">
                 <tr>
-                  <td width="80"><img src="'.base_url('assets/img/logo_unhas.png').'" style="height:60px"></td>
+                  <td width="80"><img src="'.$logoData.'" style="height:60px"></td>
                   <td style="text-align:center;font-weight:bold">
                     KEMENTERIAN RISET, TEKNOLOGI, DAN PENDIDIKAN TINGGI<br>
                     UNIVERSITAS HASANUDDIN<br>
@@ -269,7 +276,6 @@ if (class_exists(\Dompdf\Options::class)) {
 }
 
 
-        $dompdf = new Dompdf($opts);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->loadHtml('<style>body{font-family:DejaVu Sans, Arial, sans-serif;font-size:11pt}</style>'.$html);
         $dompdf->render();

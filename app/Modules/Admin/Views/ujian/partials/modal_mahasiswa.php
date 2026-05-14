@@ -1,9 +1,12 @@
+<div class="p-3">
+
+
 <div class="mb-3">
   <label class="form-label">Pencarian</label>
   <input type="text" id="mhsSearch" class="form-control" placeholder="Cari nama atau NIM..." value="<?= esc($q) ?>">
 </div>
 
-<div id="mhsListWrap">  <!-- <<< area yang akan diberi overlay -->
+<div id="mhsListWrap" >  <!-- <<< area yang akan diberi overlay -->
   <div class="table-responsive border rounded">
     <table class="table table-sm align-middle mb-0">
       <thead class="table-light">
@@ -46,4 +49,6 @@
     <?php endif; ?>
     <button type="button" class="btn btn-sm btn-outline-secondary mhs-page" data-page="<?= min($pages,$page+1) ?>">Next</button>
   </div>
+</div>
+
 </div>

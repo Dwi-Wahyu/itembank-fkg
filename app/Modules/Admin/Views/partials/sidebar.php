@@ -12,8 +12,18 @@ $aria     = fn(array $keys)  => in_array($menuActive ?? '', $keys, true) ? 'true
 ?>
 
 <aside class="app-sidebar" id="sidebar">
-  <div class="sidebar-inner d-flex flex-column justify-content-between">
-    <nav class="menu" id="sidebarMenu">
+  <div class="sidebar-inner d-flex flex-column">
+    
+    <!-- BRAND AREA -->
+    <div class="brand-wrap d-flex align-items-center gap-3 px-2 mb-4 mt-1">
+      <img src="<?= base_url('assets/img/logo_unhas.png') ?>" alt="Logo" class="brand-logo">
+      <div class="brand-text">
+        <div class="brand-title">E-UJIAN</div>
+        <div class="brand-sub">Fakultas Kedokteran Gigi</div>
+      </div>
+    </div>
+
+    <nav class="menu flex-grow-1" id="sidebarMenu">
       <div class="menu-section">Menu</div>
 
       <?php if ($canSuper || $canStd): ?>
@@ -29,10 +39,10 @@ $aria     = fn(array $keys)  => in_array($menuActive ?? '', $keys, true) ? 'true
       </a>
       <div class="collapse submenu <?= $open(['soal_format','soal_teori','soal_praktek']) ?>" id="navSoal" data-bs-parent="#sidebarMenu">
         <a class="submenu-item <?= $isActive('soal_teori')   ?>" href="<?= site_url('admin/soal/teori')   ?>">
-          <i class="bi bi-chevron-right"></i><span>Soal Teori</span>
+          <span>Soal Teori</span>
         </a>
         <a class="submenu-item <?= $isActive('soal_praktek') ?>" href="<?= site_url('admin/soal/praktek') ?>">
-          <i class="bi bi-chevron-right"></i><span>Soal Praktek</span>
+          <span>Soal Praktek</span>
         </a>
       </div>
 
@@ -45,10 +55,10 @@ $aria     = fn(array $keys)  => in_array($menuActive ?? '', $keys, true) ? 'true
       </a>
       <div class="collapse submenu <?= $open(['ujian_teori','ujian_praktek']) ?>" id="navUjian" data-bs-parent="#sidebarMenu">
         <a class="submenu-item <?= $isActive('ujian_teori')   ?>" href="<?= site_url('admin/ujian/teori')   ?>">
-          <i class="bi bi-chevron-right"></i><span>Teori</span>
+          <span>Teori</span>
         </a>
         <a class="submenu-item <?= $isActive('ujian_praktek') ?>" href="<?= site_url('admin/ujian/praktek') ?>">
-          <i class="bi bi-chevron-right"></i><span>Praktek</span>
+          <span>Praktek</span>
         </a>
       </div>
       <?php endif; ?>
@@ -65,25 +75,25 @@ $aria     = fn(array $keys)  => in_array($menuActive ?? '', $keys, true) ? 'true
       </a>
       <div class="collapse submenu <?= $open(['master_bid_ilmu','master_departemen','master_blok','kel_penyakit','master_kom_utama','master_mahasiswa','master_dosen']) ?>" id="navMaster" data-bs-parent="#sidebarMenu">
         <a class="submenu-item <?= $isActive('master_bid_ilmu')  ?>" href="<?= site_url('admin/master/bid-ilmu')  ?>">
-          <i class="bi bi-chevron-right"></i><span>Bidang Ilmu</span>
+          <span>Bidang Ilmu</span>
         </a>
         <a class="submenu-item <?= $isActive('master_departemen') ?>" href="<?= site_url('admin/master/departemen') ?>">
-          <i class="bi bi-chevron-right"></i><span>Departemen</span>
+          <span>Departemen</span>
         </a>
         <a class="submenu-item <?= $isActive('master_blok') ?>" href="<?= site_url('admin/master/blok') ?>">
-          <i class="bi bi-chevron-right"></i><span>Blok</span>
+          <span>Blok</span>
         </a>
         <a class="submenu-item <?= $isActive('kel_penyakit') ?>" href="<?= site_url('admin/master/kel-penyakit') ?>">
-          <i class="bi bi-chevron-right"></i><span>Kel Penyakit</span>
+          <span>Kel Penyakit</span>
         </a>
         <a class="submenu-item <?= $isActive('master_kom_utama') ?>" href="<?= site_url('admin/master/kom-utama') ?>">
-          <i class="bi bi-chevron-right"></i><span>Kompetensi Utama</span>
+          <span>Kompetensi Utama</span>
         </a>
         <a class="submenu-item <?= $isActive('master_mahasiswa') ?>" href="<?= site_url('admin/master/mahasiswa') ?>">
-          <i class="bi bi-chevron-right"></i><span>Mahasiswa</span>
+          <span>Mahasiswa</span>
         </a>
         <a class="submenu-item <?= $isActive('master_dosen') ?>" href="<?= site_url('admin/master/dosen') ?>">
-          <i class="bi bi-chevron-right"></i><span>Dosen</span>
+          <span>Dosen</span>
         </a>
       </div>
       
@@ -95,28 +105,19 @@ $aria     = fn(array $keys)  => in_array($menuActive ?? '', $keys, true) ? 'true
       </a>
       <div class="collapse submenu <?= $open(['pengguna-dosen','pengguna-reviewer','pengguna-manajemen','pengguna-administrator']) ?>" id="navPengguna" data-bs-parent="#sidebarMenu">
         <a class="submenu-item <?= $isActive('pengguna-dosen')  ?>" href="<?= site_url('admin/master/pengguna-dosen')  ?>">
-          <i class="bi bi-chevron-right"></i><span>Dosen</span>
+          <span>Dosen</span>
         </a>
         <a class="submenu-item <?= $isActive('pengguna-reviewer')  ?>" href="<?= site_url('admin/master/pengguna-reviewer')  ?>">
-          <i class="bi bi-chevron-right"></i><span>Reviewer</span>
+          <span>Reviewer</span>
         </a>
         <a class="submenu-item <?= $isActive('pengguna-manajemen')  ?>" href="<?= site_url('admin/master/pengguna-manajemen')  ?>">
-          <i class="bi bi-chevron-right"></i><span>Manajemen</span>
+          <span>Manajemen</span>
         </a>
         <a class="submenu-item <?= $isActive('pengguna-administrator')  ?>" href="<?= site_url('admin/master/pengguna-administrator')  ?>">
-          <i class="bi bi-chevron-right"></i><span>Administrator</span>
+          <span>Administrator</span>
         </a>
       </div>
       <?php endif; ?>
     </nav>
-
-    <!-- Sidebar Toggle (Desktop) -->
-    <div class="sidebar-footer mt-auto pt-3 border-top border-white border-opacity-10">
-      <button class="btn btn-link text-white p-0 d-none d-lg-inline-flex align-items-center w-100 text-decoration-none"
-              id="btnSidebarMini" type="button" title="Toggle Sidebar">
-        <i class="bi bi-chevron-double-left" id="toggleIcon" style="font-size:1.1rem"></i>
-        <span class="ms-3">Kecilkan Menu</span>
-      </button>
-    </div>
   </div>
 </aside>

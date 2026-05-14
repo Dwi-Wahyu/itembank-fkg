@@ -9,7 +9,7 @@
   </div>
 </div>
 
-<div class="table-responsive" id="soalTableContent">
+<div class="table-responsive p-3 pb-0" id="soalTableContent">
   <table class="table table-sm table-bordered table-hover align-middle mb-0" id="tblPilihSoal">
     <thead class="bg-light">
       <tr>
@@ -42,7 +42,7 @@
 </div>
 
 <?php if ($total > $per): ?>
-  <div class="card-footer bg-white pt-3 border-0">
+  <div class="card-footer pb-3 bg-white pt-3 border-0">
     <nav aria-label="Page navigation">
       <ul class="pagination pagination-sm justify-content-center mb-0">
         <?php 

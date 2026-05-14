@@ -8,7 +8,6 @@ function qurl_part($p=[]){ return current_url().'?'.http_build_query(array_merge
     <table class="table table-sm align-middle mb-0">
       <thead class="table-light">
         <tr>
-          <th style="width:140px">Opsi</th>
           <th>Kode</th>
           <th>Nama Ujian</th>
           <th>Departemen</th>
@@ -16,40 +15,59 @@ function qurl_part($p=[]){ return current_url().'?'.http_build_query(array_merge
           <th>Tanggal</th>
           <th>Waktu</th>
           <th class="text-end">Peserta</th>
+          <th style="width:80px" class="text-center">Opsi</th>
         </tr>
       </thead>
       <tbody>
       <?php if (empty($rows)): ?>
-        <tr><td colspan="7" class="text-center py-4 text-muted">Tidak ada data.</td></tr>
+        <tr><td colspan="8" class="text-center py-4 text-muted">Tidak ada data.</td></tr>
       <?php else: foreach ($rows as $r): $acc = (int)($r['review_acc'] ?? 0) === 1; ?>
         <tr>
-          <td>
-           <div class="btn-group btn-group-sm">
-  <a class="btn btn-outline-secondary" title="Detail"
-     href="<?= site_url('admin/ujian/teori/detail/'.$r['id']) ?>">
-     <i class="bi bi-search"></i>
-  </a>
-  <?php if (!$acc): ?>
-    <button class="btn btn-outline-primary btn-edit" title="Edit"
-            data-id="<?= $r['id'] ?>"><i class="bi bi-pencil-square"></i></button>
-    <button class="btn btn-outline-danger btn-del" title="Hapus"
-            data-url="<?= site_url('admin/ujian/teori/delete/'.$r['id']) ?>">
-            <i class="bi bi-trash"></i></button>
-  <?php endif; ?>
-    <a class="btn btn-sm btn-outline-secondary" target="_blank"
-   href="<?= site_url('admin/ujian/teori/laporan/'.rawurlencode($r['kode'])) ?>">
-  <i class="bi bi-file-earmark-pdf"></i> Laporan
-</a>
-</div>
-
-          </td>
           <td><?= esc($r['kode']) ?></td>
           <td><?= esc($r['nama']) ?></td>
           <td><?= esc($r['departemen'] ?: 'Semua Departemen') ?></td>
           <td><?= esc($r['blok_nama'] ?: 'Semua Blok') ?></td>
-         <td><?= esc(tgl_id($r['tanggal'])) ?></td>
-<td><?= esc(($r['mulai'] ? substr($r['mulai'],0,5) : '').' - '.($r['selesai'] ? substr($r['selesai'],0,5) : '')) ?></td>
+          <td><?= esc(tgl_id($r['tanggal'])) ?></td>
+          <td><?= esc(($r['mulai'] ? substr($r['mulai'],0,5) : '').' - '.($r['selesai'] ? substr($r['selesai'],0,5) : '')) ?></td>
           <td class="text-end"><?= number_format((int)($r['jml_peserta'] ?? 0)) ?></td>
+          <td class="text-center">
+            <div class="dropdown">
+              <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" 
+                      data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false">
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                <li>
+                  <a class="dropdown-item" title="Detail" href="<?= site_url('admin/ujian/teori/detail/'.$r['id']) ?>">
+                    <i class="bi bi-search me-2"></i> Detail
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" title="Tugaskan Soal" href="<?= site_url('admin/ujian/teori/mass-assign-soal/'.$r['id']) ?>">
+                    <i class="bi bi-journal-plus me-2"></i> Tugaskan Soal
+                  </a>
+                </li>
+                <?php if (!$acc): ?>
+                  <li>
+                    <button class="dropdown-item btn-edit" title="Edit" data-id="<?= $r['id'] ?>">
+                      <i class="bi bi-pencil-square me-2"></i> Ubah
+                    </button>
+                  </li>
+                  <li>
+                    <button class="dropdown-item btn-del text-danger" title="Hapus" data-url="<?= site_url('admin/ujian/teori/delete/'.$r['id']) ?>">
+                      <i class="bi bi-trash me-2"></i> Hapus
+                    </button>
+                  </li>
+                <?php endif; ?>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <a class="dropdown-item" target="_blank" href="<?= site_url('admin/ujian/teori/laporan/'.rawurlencode($r['kode'])) ?>">
+                    <i class="bi bi-file-earmark-pdf me-2"></i> Laporan
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </td>
         </tr>
       <?php endforeach; endif; ?>
       </tbody>

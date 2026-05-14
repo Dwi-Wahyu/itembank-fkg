@@ -487,13 +487,21 @@ public function historyMahasiswaPdf($mahasiswaId)
     }
     unset($r);
 
-    // --- template KOP (sama gaya contohmu) ---
+    // --- template KOP ---
     $kop = function () {
+        $logoPath = FCPATH . 'assets/img/logo_unhas.png';
+        $logoData = '';
+        if (file_exists($logoPath)) {
+            $type = pathinfo($logoPath, PATHINFO_EXTENSION);
+            $data = file_get_contents($logoPath);
+            $logoData = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        }
+
         return '
           <table width="100%" style="border-bottom:3px solid #000;margin-bottom:6px">
             <tr>
               <td width="80">
-                <img src="'.base_url('assets/img/logo_unhas.png').'" style="height:60px">
+                <img src="'.$logoData.'" style="height:60px">
               </td>
               <td style="text-align:center;font-weight:bold;font-size:11pt">
                 KEMENTERIAN RISET, TEKNOLOGI, DAN PENDIDIKAN TINGGI<br>
